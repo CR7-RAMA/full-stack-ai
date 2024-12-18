@@ -3,46 +3,38 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Login() {
-  const [username, setUsername] = useState(""); // Default values ensure consistency
-  const [password, setPassword] = useState(""); // Default values ensure consistency
+export default function Signup() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:8000/login", {
+      const response = await fetch("http://127.0.0.1:8000/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
 
       if (response.ok) {
-        alert("Login successful!");
-        router.push("/");
+        alert("Signup successful! Redirecting to login page.");
+        router.push("/login");
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.detail}`);
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Signup error:", error);
       alert("An error occurred. Please try again.");
     }
-  };
-
-  const handleForgotPassword = () => {
-    alert("Redirect to forgot password page or functionality.");
-  };
-
-  const handleSignupRedirect = () => {
-    router.push("/signup");
   };
 
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h2 style={styles.header}>Login</h2>
-        <form onSubmit={handleSubmit} style={styles.form}>
+        <h2 style={styles.header}>Signup</h2>
+        <form onSubmit={handleSignup} style={styles.form}>
           <div style={styles.formGroup}>
             <label htmlFor="username" style={styles.label}>
               Username
@@ -72,23 +64,16 @@ export default function Login() {
             />
           </div>
           <button type="submit" style={styles.button}>
-            Login
+            Signup
           </button>
           <button
             type="button"
-            onClick={handleForgotPassword}
-            style={styles.forgotButton}
+            onClick={() => router.push("/login")}
+            style={styles.loginButton}
           >
-            Forgot Password?
+            Already have an account? Login
           </button>
         </form>
-        <button
-          type="button"
-          onClick={handleSignupRedirect}
-          style={styles.signupButton}
-        >
-          New User? Signup
-        </button>
       </div>
     </div>
   );
@@ -133,8 +118,8 @@ const styles = {
     borderRadius: "4px",
     border: "1px solid #dddddd",
     outline: "none",
-    color: "#333333", // Ensures input text is visible
-    backgroundColor: "#ffffff",
+    color: "#333333", // Explicitly set input text color
+    backgroundColor: "#ffffff", // Ensure background matches the card
   },
   button: {
     backgroundColor: "#0070f3",
@@ -147,18 +132,7 @@ const styles = {
     transition: "background-color 0.2s ease",
     marginTop: "1rem",
   },
-  forgotButton: {
-    backgroundColor: "transparent",
-    color: "#0070f3",
-    padding: "0.5rem",
-    fontSize: "0.9rem",
-    border: "none",
-    cursor: "pointer",
-    textDecoration: "underline",
-    marginTop: "0.5rem",
-    textAlign: "center",
-  },
-  signupButton: {
+  loginButton: {
     backgroundColor: "transparent",
     color: "#0070f3",
     padding: "0.5rem",
